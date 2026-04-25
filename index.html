@@ -109,7 +109,15 @@
       radial-gradient(ellipse 40% 80% at 10% 80%, rgba(200,184,154,0.04) 0%, transparent 60%);
   }
 
-  .hero-grid-line {
+  .hero-topo {
+    position: absolute;
+    inset: 0;
+    background-image: url('Typography_IMG.png');
+    background-size: cover;
+    background-position: center right;
+    opacity: 0.12;
+    mix-blend-mode: luminosity;
+  }
     position: absolute;
     top: 0;
     bottom: 0;
@@ -976,6 +984,7 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
+  <div class="hero-topo"></div>
   <div class="hero-grid-line"></div>
   <div class="hero-grid-line"></div>
   <div class="hero-grid-line"></div>
