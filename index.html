@@ -754,11 +754,109 @@
 
   .mantra-card {
     background: var(--bg);
-    padding: 2rem 2.5rem;
-    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+    min-height: 180px;
   }
 
-  .mantra-card:hover { background: var(--surface); }
+  .mantra-card:hover { border-color: var(--gold-dim); }
+  .mantra-card.flipped { border-color: var(--gold-dim); }
+
+  .mantra-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+  }
+
+  .mantra-front, .mantra-back {
+    grid-area: 1 / 1;
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+    height: 100%;
+  }
+
+  .mantra-front {
+    opacity: 1;
+    transform: rotateY(0deg);
+    pointer-events: auto;
+    background: var(--bg);
+  }
+
+  .mantra-back {
+    opacity: 0;
+    transform: rotateY(90deg);
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: var(--surface);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .mantra-card.flipped .mantra-front {
+    opacity: 0;
+    transform: rotateY(-90deg);
+    pointer-events: none;
+  }
+
+  .mantra-card.flipped .mantra-back {
+    opacity: 1;
+    transform: rotateY(0deg);
+    pointer-events: auto;
+  }
+
+  .mantra-video-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    background: #000;
+    flex-shrink: 0;
+  }
+
+  .mantra-video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .mantra-video-footer {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+  }
+
+  .mantra-video-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--tan-light);
+  }
+
+  .mantra-video-ref {
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold-dim);
+  }
+
+  .mantra-flip-hint {
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    opacity: 0.7;
+  }
 
   .mantra-name {
     font-size: 0.7rem;
@@ -1030,6 +1128,7 @@
     .resources-grid { grid-template-columns: 1fr; }
     .fit-grid { grid-template-columns: 1fr; }
     .mantras-grid { grid-template-columns: 1fr; }
+    .mantra-card { min-height: unset; }
 
     .chair-card { padding: 1.5rem; }
 
@@ -1316,7 +1415,7 @@
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:center;">
         <div>
           <div class="section-label" style="margin-bottom:0.75rem;">Why This Framework Works</div>
-          <p style="font-size:0.9rem; color:var(--muted); line-height:1.7;">The 4-Chair model gives every leader, parent, and student a shared language. It removes ambiguity. It names where someone is without judgment. And it creates a clear, compelling picture of where Jesus is calling them next.</p>
+          <p style="font-size:0.9rem; color:var(--muted); line-height:1.7;">The 4-Chair model gives every leader, parent, and student shared language. It removes ambiguity. It clarifies where someone is without judgment. It offers a compelling picture of what Jesus might be calling them to. Disciple-makers use this tool to help shepherd people to what God has next for them.</p>
         </div>
         <div style="display:flex; flex-direction:column; gap:0.75rem;">
           <div style="display:flex; align-items:center; gap:1rem; padding:0.75rem 1rem; border:1px solid var(--border);">
@@ -1355,7 +1454,7 @@
       <div class="resource-tags">
         <span class="tag">Leader Onboarding</span>
         <span class="tag">Big Picture</span>
-        <span class="tag">Printable</span>
+        <span class="tag">Interview</span>
       </div>
     </div>
 
@@ -1399,34 +1498,130 @@
   <div class="section-full-inner">
     <div class="section-label">Southeast Values</div>
     <h2 class="section-title">The Mantras That<br><em style="font-style:italic; color:var(--tan);">Drive the Mission</em></h2>
-    <p class="section-subtitle">These aren't slogans. They're Scripture-rooted postures that shape how we engage the mission every single week.</p>
+    <p class="section-subtitle">These aren't slogans. They're Scripture-rooted postures that shape how we engage the mission every single day.</p>
 
     <div class="mantras-grid reveal">
-      <div class="mantra-card">
-        <div class="mantra-name">John 15:1–17</div>
-        <div class="mantra-title">Be the Branch</div>
-        <p class="mantra-values">We connect in community. We value connection over production.</p>
+
+      <!-- BE THE BRANCH -->
+      <div class="mantra-card" onclick="this.classList.toggle('flipped')">
+        <div class="mantra-inner">
+          <div class="mantra-front">
+            <div class="mantra-name">John 15:1–17</div>
+            <div class="mantra-title">Be the Branch</div>
+            <p class="mantra-values">We connect in community. We value connection over production.</p>
+            <div class="mantra-flip-hint">Tap to watch the sermon ↻</div>
+          </div>
+          <div class="mantra-back">
+            <div class="mantra-video-wrap">
+              <iframe src="https://www.youtube.com/embed/7CiuoOl2ULM" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="mantra-video-footer">
+              <div>
+                <div class="mantra-video-title">Be the Branch</div>
+                <div class="mantra-video-ref">John 15:1–17</div>
+              </div>
+              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mantra-card">
-        <div class="mantra-name">John 3:1–8</div>
-        <div class="mantra-title">Catch the Wind</div>
-        <p class="mantra-values">We connect the full force of the church with the Holy Spirit. We value risk and adventure over safety and comfort.</p>
+
+      <!-- CATCH THE WIND -->
+      <div class="mantra-card" onclick="this.classList.toggle('flipped')">
+        <div class="mantra-inner">
+          <div class="mantra-front">
+            <div class="mantra-name">John 3:1–8</div>
+            <div class="mantra-title">Catch the Wind</div>
+            <p class="mantra-values">We connect the full force of the church with the Holy Spirit. We value risk and adventure over safety and comfort.</p>
+            <div class="mantra-flip-hint">Tap to watch the sermon ↻</div>
+          </div>
+          <div class="mantra-back">
+            <div class="mantra-video-wrap">
+              <iframe src="https://www.youtube.com/embed/Qz4dikYRPps" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="mantra-video-footer">
+              <div>
+                <div class="mantra-video-title">Catch the Wind</div>
+                <div class="mantra-video-ref">John 3:1–8</div>
+              </div>
+              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mantra-card">
-        <div class="mantra-name">Luke 5:18–25</div>
-        <div class="mantra-title">Wreck the Roof</div>
-        <p class="mantra-values">We will radically love people one at a time. We value innovation over tradition.</p>
+
+      <!-- WRECK THE ROOF -->
+      <div class="mantra-card" onclick="this.classList.toggle('flipped')">
+        <div class="mantra-inner">
+          <div class="mantra-front">
+            <div class="mantra-name">Luke 5:18–25</div>
+            <div class="mantra-title">Wreck the Roof</div>
+            <p class="mantra-values">We will radically love people one at a time. We value innovation over tradition.</p>
+            <div class="mantra-flip-hint">Tap to watch the sermon ↻</div>
+          </div>
+          <div class="mantra-back">
+            <div class="mantra-video-wrap">
+              <iframe src="https://www.youtube.com/embed/WR3hTQ9HEmg" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="mantra-video-footer">
+              <div>
+                <div class="mantra-video-title">Wreck the Roof</div>
+                <div class="mantra-video-ref">Luke 5:18–25</div>
+              </div>
+              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mantra-card">
-        <div class="mantra-name">Luke 9:57–62</div>
-        <div class="mantra-title">Grip the Plow</div>
-        <p class="mantra-values">We serve with intentional and focused effort. We value personal engagement over attendance.</p>
+
+      <!-- GRIP THE PLOW -->
+      <div class="mantra-card" onclick="this.classList.toggle('flipped')">
+        <div class="mantra-inner">
+          <div class="mantra-front">
+            <div class="mantra-name">Luke 9:57–62</div>
+            <div class="mantra-title">Grip the Plow</div>
+            <p class="mantra-values">We serve with intentional and focused effort. We value personal engagement over attendance.</p>
+            <div class="mantra-flip-hint">Tap to watch the sermon ↻</div>
+          </div>
+          <div class="mantra-back">
+            <div class="mantra-video-wrap">
+              <iframe src="https://www.youtube.com/embed/5lOpant1w40" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="mantra-video-footer">
+              <div>
+                <div class="mantra-video-title">Grip the Plow</div>
+                <div class="mantra-video-ref">Luke 9:57–62</div>
+              </div>
+              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mantra-card">
-        <div class="mantra-name">Luke 7:36–50</div>
-        <div class="mantra-title">Empty the Jar</div>
-        <p class="mantra-values">We connect through sacrificial generosity. We value expressive worship over religious rituals.</p>
+
+      <!-- EMPTY THE JAR -->
+      <div class="mantra-card" onclick="this.classList.toggle('flipped')">
+        <div class="mantra-inner">
+          <div class="mantra-front">
+            <div class="mantra-name">Luke 7:36–50</div>
+            <div class="mantra-title">Empty the Jar</div>
+            <p class="mantra-values">We connect through sacrificial generosity. We value expressive worship over religious rituals.</p>
+            <div class="mantra-flip-hint">Tap to watch the sermon ↻</div>
+          </div>
+          <div class="mantra-back">
+            <div class="mantra-video-wrap">
+              <iframe src="https://www.youtube.com/embed/2d4KeZWnkOE" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="mantra-video-footer">
+              <div>
+                <div class="mantra-video-title">Empty the Jar</div>
+                <div class="mantra-video-ref">Luke 7:36–50</div>
+              </div>
+              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
