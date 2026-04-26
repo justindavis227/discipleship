@@ -1049,7 +1049,7 @@
       </div>
       <div class="stat-card">
         <div class="stat-card-label">OUR WHY</div>
-        <div class="stat-card-value">143,556</div>
+        <div class="stat-card-value" id="countup-stat">0</div>
         <div class="stat-card-sub">Lost students within reach of Southeast Christian Church</div>
       </div>
     </div>
@@ -1336,7 +1336,37 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  // Scroll reveal
+  // Count-up animation
+  const countupEl = document.getElementById('countup-stat');
+  const countupTarget = 143556;
+  const countupDuration = 8000;
+  let countupStarted = false;
+
+  function runCountup() {
+    if (countupStarted) return;
+    countupStarted = true;
+    const startTime = performance.now();
+    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / countupDuration, 1);
+      const value = Math.round(easeOutExpo(progress) * countupTarget);
+      countupEl.textContent = value.toLocaleString();
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const countupObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        runCountup();
+        countupObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  countupObserver.observe(countupEl);
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver(entries => {
     entries.forEach((entry, i) => {
