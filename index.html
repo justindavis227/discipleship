@@ -423,51 +423,65 @@
     background: transparent;
     padding: 0;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     cursor: pointer;
-    perspective: 1000px;
-    min-height: 320px;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
   }
 
-  .chair-card:hover { background: transparent; }
+  .chair-card:hover { border-color: var(--gold-dim); }
+  .chair-card.flipped { border-color: var(--gold-dim); }
 
   .chair-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 320px;
-    transform-style: preserve-3d;
-    transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
-  }
-
-  .chair-card.flipped .chair-inner {
-    transform: rotateY(180deg);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
   }
 
   .chair-front, .chair-back {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    grid-area: 1 / 1;
     padding: 2rem;
-    background: var(--bg);
-    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
+    transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+    backface-visibility: hidden;
   }
 
-  .chair-front { z-index: 2; }
+  /* Front visible by default */
+  .chair-front {
+    opacity: 1;
+    transform: rotateY(0deg);
+    background: var(--bg);
+    pointer-events: auto;
+  }
 
   .chair-back {
-    transform: rotateY(180deg);
+    opacity: 0;
+    transform: rotateY(90deg);
     background: var(--surface);
-    justify-content: space-between;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
   }
 
-  .chair-back-hint {
+  /* Flipped state */
+  .chair-card.flipped .chair-front {
+    opacity: 0;
+    transform: rotateY(-90deg);
+    pointer-events: none;
+  }
+
+  .chair-card.flipped .chair-back {
+    opacity: 1;
+    transform: rotateY(0deg);
+    pointer-events: auto;
+  }
+
+  .chair-back-label {
     font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
+    font-weight: 700;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 1rem;
@@ -475,13 +489,12 @@
     align-items: center;
     gap: 0.5rem;
   }
-
-  .chair-back-hint::before { content: ''; width: 1rem; height: 1px; background: var(--gold); }
+  .chair-back-label::before { content: ''; width: 1rem; height: 1px; background: var(--gold); }
 
   .chair-scripture {
     font-size: 0.82rem;
     color: var(--tan);
-    line-height: 1.75;
+    line-height: 1.8;
     flex: 1;
   }
 
@@ -500,38 +513,32 @@
   }
 
   .chair-flip-hint {
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     color: var(--muted);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    text-align: right;
     margin-top: 0.5rem;
+    opacity: 0.7;
   }
 
   .chair-number {
     font-family: 'DM Mono', monospace;
     font-size: 0.7rem;
     color: var(--gold);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     letter-spacing: 0.1em;
-  }
-
-  .chair-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    display: block;
   }
 
   .chair-title {
     font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--white);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
 
   .chair-challenge {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -540,30 +547,39 @@
   }
 
   .chair-action {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--muted);
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 1rem;
+    flex: 1;
   }
 
   .chair-verse {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-family: 'DM Mono', monospace;
     color: var(--gold-dim);
-    margin-top: auto;
+    margin-bottom: 0.5rem;
   }
 
   .chair-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0%;
     height: 2px;
-    background: var(--gold);
-    transition: width 0.4s ease;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+    margin-top: 0.25rem;
   }
 
-  .chair-card:not(.flipped):hover .chair-bar { width: 100%; }
+  .chair-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .chair-card:not(.flipped):hover .chair-bar::after { transform: scaleX(1); }
 
   /* ─── RESOURCES SECTION ─── */
   .resources-grid {
@@ -1184,26 +1200,22 @@
         <div class="chair-inner">
           <div class="chair-front">
             <div class="chair-number">CHAIR 01</div>
-            <img src="10.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <img src="10.png" style="width:52px;display:block;margin-bottom:1rem;">
             <div class="chair-title">The Lost</div>
             <div class="chair-challenge">"Come & See"</div>
             <p class="chair-action">The invitation before the commitment. Every student matters before they believe. We move toward them.</p>
             <div class="chair-verse">John 1:39 · Reach</div>
-            <div class="chair-flip-hint">Tap to see scripture ↻</div>
             <div class="chair-bar"></div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
           </div>
           <div class="chair-back">
-            <div>
-              <div class="chair-back-hint">John 1:38–39</div>
-              <p class="chair-scripture">
-                <sup style="color:var(--gold-dim);">38</sup> Jesus looked around and saw them following. "What do you want?" he asked them. They replied, "Rabbi" (which means "Teacher"), "where are you staying?"<br><br>
-                <sup style="color:var(--gold-dim);">39</sup> <span class="highlight">"Come and see,"</span> he said. It was about four o'clock in the afternoon when they went with him to the place where he was staying, and they remained with him the rest of the day.
-              </p>
-            </div>
-            <div>
-              <div class="chair-ref">John 1:38–39</div>
-              <div class="chair-flip-hint">Tap to flip back ↻</div>
-            </div>
+            <div class="chair-back-label">John 1:38–39</div>
+            <p class="chair-scripture">
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">38</sup> Jesus looked around and saw them following. "What do you want?" he asked them. They replied, "Rabbi" (which means "Teacher"), "where are you staying?"<br><br>
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">39</sup> <span class="highlight">"Come and see,"</span> he said. It was about four o'clock in the afternoon when they went with him to the place where he was staying, and they remained with him the rest of the day.
+            </p>
+            <div class="chair-ref">John 1:38–39</div>
+            <div class="chair-flip-hint">Tap to flip back ↻</div>
           </div>
         </div>
       </div>
@@ -1213,27 +1225,23 @@
         <div class="chair-inner">
           <div class="chair-front">
             <div class="chair-number">CHAIR 02</div>
-            <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <img src="11.png" style="width:52px;display:block;margin-bottom:1rem;">
             <div class="chair-title">The Believer</div>
             <div class="chair-challenge">"Follow Me"</div>
             <p class="chair-action">The starting line, not the finish line. Every new believer needs to establish spiritual disciplines for lifelong growth in Christ.</p>
             <div class="chair-verse">John 1:43 · Build</div>
-            <div class="chair-flip-hint">Tap to see scripture ↻</div>
             <div class="chair-bar"></div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
           </div>
           <div class="chair-back">
-            <div>
-              <div class="chair-back-hint">John 1:43–45</div>
-              <p class="chair-scripture">
-                <sup style="color:var(--gold-dim);">43</sup> The next day Jesus decided to go to Galilee. He found Philip and said to him, <span class="highlight">"Come, follow me."</span><br><br>
-                <sup style="color:var(--gold-dim);">44</sup> Philip was from Bethsaida, Andrew and Peter's hometown.<br><br>
-                <sup style="color:var(--gold-dim);">45</sup> Philip went to look for Nathanael and told him, "We have found the very person Moses and the prophets wrote about! His name is Jesus, the son of Joseph from Nazareth."
-              </p>
-            </div>
-            <div>
-              <div class="chair-ref">John 1:43–45</div>
-              <div class="chair-flip-hint">Tap to flip back ↻</div>
-            </div>
+            <div class="chair-back-label">John 1:43–45</div>
+            <p class="chair-scripture">
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">43</sup> The next day Jesus decided to go to Galilee. He found Philip and said to him, <span class="highlight">"Come, follow me."</span><br><br>
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">44</sup> Philip was from Bethsaida, Andrew and Peter's hometown.<br><br>
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">45</sup> Philip went to look for Nathanael and told him, "We have found the very person Moses and the prophets wrote about! His name is Jesus, the son of Joseph from Nazareth."
+            </p>
+            <div class="chair-ref">John 1:43–45</div>
+            <div class="chair-flip-hint">Tap to flip back ↻</div>
           </div>
         </div>
       </div>
@@ -1243,27 +1251,23 @@
         <div class="chair-inner">
           <div class="chair-front">
             <div class="chair-number">CHAIR 03</div>
-            <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <img src="11.png" style="width:52px;display:block;margin-bottom:1rem;">
             <div class="chair-title">The Worker</div>
             <div class="chair-challenge">"Fish for Men"</div>
             <p class="chair-action">Students learn to pursue the lost, share their story, and grip the plow of ministry. They've shifted from me-centric to others-centric.</p>
             <div class="chair-verse">Matthew 4:19 · Equip</div>
-            <div class="chair-flip-hint">Tap to see scripture ↻</div>
             <div class="chair-bar"></div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
           </div>
           <div class="chair-back">
-            <div>
-              <div class="chair-back-hint">Matthew 4:18–20</div>
-              <p class="chair-scripture">
-                <sup style="color:var(--gold-dim);">18</sup> One day as Jesus was walking along the shore of the Sea of Galilee, he saw two brothers—Simon, also called Peter, and Andrew—throwing a net into the water, for they fished for a living.<br><br>
-                <sup style="color:var(--gold-dim);">19</sup> Jesus called out to them, <span class="highlight">"Come, follow me, and I will show you how to fish for people!"</span><br><br>
-                <sup style="color:var(--gold-dim);">20</sup> And they left their nets at once and followed him.
-              </p>
-            </div>
-            <div>
-              <div class="chair-ref">Matthew 4:18–20</div>
-              <div class="chair-flip-hint">Tap to flip back ↻</div>
-            </div>
+            <div class="chair-back-label">Matthew 4:18–20</div>
+            <p class="chair-scripture">
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">18</sup> One day as Jesus was walking along the shore of the Sea of Galilee, he saw two brothers—Simon, also called Peter, and Andrew—throwing a net into the water, for they fished for a living.<br><br>
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">19</sup> Jesus called out to them, <span class="highlight">"Come, follow me, and I will show you how to fish for people!"</span><br><br>
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">20</sup> And they left their nets at once and followed him.
+            </p>
+            <div class="chair-ref">Matthew 4:18–20</div>
+            <div class="chair-flip-hint">Tap to flip back ↻</div>
           </div>
         </div>
       </div>
@@ -1273,25 +1277,21 @@
         <div class="chair-inner">
           <div class="chair-front">
             <div class="chair-number">CHAIR 04</div>
-            <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <img src="11.png" style="width:52px;display:block;margin-bottom:1rem;">
             <div class="chair-title">Disciple-Maker</div>
             <div class="chair-challenge">"Go & Bear Fruit"</div>
             <p class="chair-action">A movement begins. Someone they led to Christ is now discipling someone they led to Christ. The Great Commission is in full effect.</p>
             <div class="chair-verse">John 15:5 · Multiply</div>
-            <div class="chair-flip-hint">Tap to see scripture ↻</div>
             <div class="chair-bar"></div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
           </div>
           <div class="chair-back">
-            <div>
-              <div class="chair-back-hint">John 15:16</div>
-              <p class="chair-scripture">
-                <sup style="color:var(--gold-dim);">16</sup> You did not choose me, but I chose you and appointed you so that you might <span class="highlight">go and bear fruit—fruit that will last</span>—and so that whatever you ask in my name the Father will give you.
-              </p>
-            </div>
-            <div>
-              <div class="chair-ref">John 15:16</div>
-              <div class="chair-flip-hint">Tap to flip back ↻</div>
-            </div>
+            <div class="chair-back-label">John 15:16</div>
+            <p class="chair-scripture">
+              <sup style="color:var(--gold-dim);font-size:0.7rem;">16</sup> You did not choose me, but I chose you and appointed you so that you might <span class="highlight">go and bear fruit—fruit that will last</span>—and so that whatever you ask in my name the Father will give you.
+            </p>
+            <div class="chair-ref">John 15:16</div>
+            <div class="chair-flip-hint">Tap to flip back ↻</div>
           </div>
         </div>
       </div>
@@ -1495,7 +1495,31 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  // Count-up animation
+  // Equalize chair card heights
+  function equalizeChairHeights() {
+    const grid = document.querySelector('.chairs-grid');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.chair-card');
+    cards.forEach(c => c.style.minHeight = '');
+    if (window.innerWidth <= 900) return; // let mobile stack naturally
+    let maxH = 0;
+    cards.forEach(c => {
+      const front = c.querySelector('.chair-front');
+      const back = c.querySelector('.chair-back');
+      back.style.position = 'static';
+      back.style.opacity = '1';
+      back.style.transform = 'none';
+      const h = Math.max(front.offsetHeight, back.offsetHeight);
+      if (h > maxH) maxH = h;
+      back.style.position = '';
+      back.style.opacity = '';
+      back.style.transform = '';
+    });
+    cards.forEach(c => c.style.minHeight = maxH + 'px');
+  }
+
+  equalizeChairHeights();
+  window.addEventListener('resize', equalizeChairHeights);
   const countupEl = document.getElementById('countup-stat');
   const countupTarget = 143556;
   const countupDuration = 8000;
