@@ -797,6 +797,9 @@
     background: var(--surface);
     padding: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .mantra-card.flipped .mantra-front {
@@ -814,7 +817,7 @@
   .mantra-video-wrap {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%;
+    padding-bottom: 40%;
     background: #000;
     flex-shrink: 0;
   }
@@ -828,24 +831,45 @@
   }
 
   .mantra-video-footer {
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-top: 1px solid var(--border);
+    flex-shrink: 0;
   }
 
   .mantra-video-title {
     font-family: 'Playfair Display', serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 700;
     color: var(--tan-light);
   }
 
   .mantra-video-ref {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-family: 'DM Mono', monospace;
     color: var(--gold-dim);
+    margin-top: 0.15rem;
+  }
+
+  .mantra-flip-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--tan);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+    transition: border-color 0.2s, color 0.2s;
+    flex-shrink: 0;
   }
 
   .mantra-flip-hint {
@@ -1520,7 +1544,7 @@
                 <div class="mantra-video-title">Be the Branch</div>
                 <div class="mantra-video-ref">John 15:1–17</div>
               </div>
-              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+              <button class="mantra-flip-back-btn" onclick="event.stopPropagation(); this.closest('.mantra-card').classList.remove('flipped')">↩ Flip Back</button>
             </div>
           </div>
         </div>
@@ -1544,7 +1568,7 @@
                 <div class="mantra-video-title">Catch the Wind</div>
                 <div class="mantra-video-ref">John 3:1–8</div>
               </div>
-              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+              <button class="mantra-flip-back-btn" onclick="event.stopPropagation(); this.closest('.mantra-card').classList.remove('flipped')">↩ Flip Back</button>
             </div>
           </div>
         </div>
@@ -1568,7 +1592,7 @@
                 <div class="mantra-video-title">Wreck the Roof</div>
                 <div class="mantra-video-ref">Luke 5:18–25</div>
               </div>
-              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+              <button class="mantra-flip-back-btn" onclick="event.stopPropagation(); this.closest('.mantra-card').classList.remove('flipped')">↩ Flip Back</button>
             </div>
           </div>
         </div>
@@ -1592,7 +1616,7 @@
                 <div class="mantra-video-title">Grip the Plow</div>
                 <div class="mantra-video-ref">Luke 9:57–62</div>
               </div>
-              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+              <button class="mantra-flip-back-btn" onclick="event.stopPropagation(); this.closest('.mantra-card').classList.remove('flipped')">↩ Flip Back</button>
             </div>
           </div>
         </div>
@@ -1616,7 +1640,7 @@
                 <div class="mantra-video-title">Empty the Jar</div>
                 <div class="mantra-video-ref">Luke 7:36–50</div>
               </div>
-              <div class="mantra-flip-hint" style="margin-top:0; padding-top:0;">Tap to flip back ↻</div>
+              <button class="mantra-flip-back-btn" onclick="event.stopPropagation(); this.closest('.mantra-card').classList.remove('flipped')">↩ Flip Back</button>
             </div>
           </div>
         </div>
