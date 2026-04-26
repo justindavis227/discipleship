@@ -418,16 +418,94 @@
     margin-top: 3rem;
   }
 
+  /* ─── FLIP CARD SYSTEM ─── */
   .chair-card {
-    background: var(--bg);
-    padding: 2rem;
+    background: transparent;
+    padding: 0;
     position: relative;
-    overflow: hidden;
-    transition: background 0.25s;
+    overflow: visible;
+    cursor: pointer;
+    perspective: 1000px;
+    min-height: 320px;
   }
 
-  .chair-card:hover {
-    background: var(--surface2);
+  .chair-card:hover { background: transparent; }
+
+  .chair-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    transform-style: preserve-3d;
+    transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+
+  .chair-card.flipped .chair-inner {
+    transform: rotateY(180deg);
+  }
+
+  .chair-front, .chair-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    padding: 2rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chair-front { z-index: 2; }
+
+  .chair-back {
+    transform: rotateY(180deg);
+    background: var(--surface);
+    justify-content: space-between;
+  }
+
+  .chair-back-hint {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .chair-back-hint::before { content: ''; width: 1rem; height: 1px; background: var(--gold); }
+
+  .chair-scripture {
+    font-size: 0.82rem;
+    color: var(--tan);
+    line-height: 1.75;
+    flex: 1;
+  }
+
+  .chair-scripture .highlight {
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .chair-ref {
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold-dim);
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .chair-flip-hint {
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: right;
+    margin-top: 0.5rem;
   }
 
   .chair-number {
@@ -472,6 +550,7 @@
     font-size: 0.72rem;
     font-family: 'DM Mono', monospace;
     color: var(--gold-dim);
+    margin-top: auto;
   }
 
   .chair-bar {
@@ -484,7 +563,7 @@
     transition: width 0.4s ease;
   }
 
-  .chair-card:hover .chair-bar { width: 100%; }
+  .chair-card:not(.flipped):hover .chair-bar { width: 100%; }
 
   /* ─── RESOURCES SECTION ─── */
   .resources-grid {
@@ -969,7 +1048,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">SE.CHURCH <span>// Next Gen</span></div>
+  <div class="nav-logo"><span style="color:var(--tan-light); font-weight:400;">Discipling the</span> <span>Next Generation</span></div>
   <ul class="nav-links">
     <li><a href="#philosophy">Philosophy</a></li>
     <li><a href="#framework">Framework</a></li>
@@ -1066,26 +1145,26 @@
 <!-- PHILOSOPHY -->
 <section id="philosophy">
   <div class="section-label">Core Philosophy</div>
-  <h2 class="section-title">Discipleship is an<br><em style="font-style:italic; color:var(--tan);">Adventure, Not a Program</em></h2>
-  <p class="section-subtitle">Every resource, every curriculum, every leader development tool is built on a single conviction: people need clarity about where they are and a pathway to what's next.</p>
+  <h2 class="section-title">Discipleship is a Journey,<br><em style="font-style:italic; color:var(--tan);">Not a Program</em></h2>
+  <p class="section-subtitle">Every resource, every curriculum, every leader development tool is built on a single conviction: Jesus is our model. He brings our clarity and He's already charted the path to what's next.</p>
 
   <div class="philosophy-grid reveal">
     <div class="philosophy-card">
       <div class="phil-number">01</div>
-      <div class="phil-title">Clarity Over Complexity</div>
-      <p class="phil-body">Discipleship resources must be simple enough to hold in your hand and complex enough to capture the full life of following Jesus. Language matters. Labels create lanes.</p>
+      <div class="phil-title">Rooted in Christ</div>
+      <p class="phil-body">Discipleship comes in lots of shapes and sizes. We simply desire that what we do be rooted in Christ. Our tools are intended to bring clarity to how we best disciple the next generation together.</p>
       <div class="phil-verse">Colossians 1:6</div>
     </div>
     <div class="philosophy-card">
       <div class="phil-number">02</div>
       <div class="phil-title">Systems Enable Shepherds</div>
-      <p class="phil-body">When curriculum, training, and communication systems work well, leaders are freed to do what only they can do — know students by name and walk with them toward Christ.</p>
+      <p class="phil-body">When tools, training, and communication systems work well, leaders are freed to do what only they can do — know their flock and shepherd them towards Christ.</p>
       <div class="phil-verse">Luke 9:1-6</div>
     </div>
     <div class="philosophy-card">
       <div class="phil-number">03</div>
       <div class="phil-title">Jesus Is the Model</div>
-      <p class="phil-body">Before strategy, before systems, before curriculum — Jesus. He chose Twelve, invested in a few, engaged the crowd, followed up, and raised the bar. We do the same.</p>
+      <p class="phil-body">Before strategy, before systems, we look at Jesus' model. We are unapologetic about doing as He did to disciple and reach the next generation.</p>
       <div class="phil-verse">1 John 2:6</div>
     </div>
   </div>
@@ -1096,52 +1175,134 @@
   <div class="section-full-inner">
     <div class="section-label">The 4-Chair Framework</div>
     <h2 class="section-title">Every Student Is Somewhere.<br><em style="font-style:italic; color:var(--tan);">Our Job Is What Comes Next.</em></h2>
-    <p class="section-subtitle">Leveraging the word picture of 4 Chairs, this helps us identify where a student sits spiritually so we can best lead them to what's next. Built to give leaders, students, and parents a shared vocabulary for spiritual growth. Four chairs. Four movements. Disciple cycles.</p>
+    <p class="section-subtitle">Leveraging the word picture of 4 Chairs, this helps us identify where a student sits spiritually so we can best lead them to what's next. Built to give leaders, students, and parents a shared vision for spiritual growth. Four chairs. Four challenges. Four movements.</p>
 
     <div class="chairs-grid reveal">
-      <div class="chair-card">
-        <div class="chair-number">CHAIR 01</div>
-        <img src="10.png" style="width:56px;display:block;margin-bottom:1rem;">
-        <div class="chair-title">The Lost</div>
-        <div class="chair-challenge">"Come & See"</div>
-        <p class="chair-action">The invitation before the commitment. Every student matters before they believe. We move toward them.</p>
-        <div class="chair-verse">John 1:39 · Reach</div>
-        <div class="chair-bar"></div>
+
+      <!-- CHAIR 1 -->
+      <div class="chair-card" onclick="this.classList.toggle('flipped')">
+        <div class="chair-inner">
+          <div class="chair-front">
+            <div class="chair-number">CHAIR 01</div>
+            <img src="10.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <div class="chair-title">The Lost</div>
+            <div class="chair-challenge">"Come & See"</div>
+            <p class="chair-action">The invitation before the commitment. Every student matters before they believe. We move toward them.</p>
+            <div class="chair-verse">John 1:39 · Reach</div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
+            <div class="chair-bar"></div>
+          </div>
+          <div class="chair-back">
+            <div>
+              <div class="chair-back-hint">John 1:38–39</div>
+              <p class="chair-scripture">
+                <sup style="color:var(--gold-dim);">38</sup> Jesus looked around and saw them following. "What do you want?" he asked them. They replied, "Rabbi" (which means "Teacher"), "where are you staying?"<br><br>
+                <sup style="color:var(--gold-dim);">39</sup> <span class="highlight">"Come and see,"</span> he said. It was about four o'clock in the afternoon when they went with him to the place where he was staying, and they remained with him the rest of the day.
+              </p>
+            </div>
+            <div>
+              <div class="chair-ref">John 1:38–39</div>
+              <div class="chair-flip-hint">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="chair-card">
-        <div class="chair-number">CHAIR 02</div>
-        <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
-        <div class="chair-title">The Believer</div>
-        <div class="chair-challenge">"Follow Me"</div>
-        <p class="chair-action">The starting line, not the finish line. Every new believer needs to establish spiritual disciplines for lifelong growth in Christ.</p>
-        <div class="chair-verse">John 1:43 · Build</div>
-        <div class="chair-bar"></div>
+
+      <!-- CHAIR 2 -->
+      <div class="chair-card" onclick="this.classList.toggle('flipped')">
+        <div class="chair-inner">
+          <div class="chair-front">
+            <div class="chair-number">CHAIR 02</div>
+            <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <div class="chair-title">The Believer</div>
+            <div class="chair-challenge">"Follow Me"</div>
+            <p class="chair-action">The starting line, not the finish line. Every new believer needs to establish spiritual disciplines for lifelong growth in Christ.</p>
+            <div class="chair-verse">John 1:43 · Build</div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
+            <div class="chair-bar"></div>
+          </div>
+          <div class="chair-back">
+            <div>
+              <div class="chair-back-hint">John 1:43–45</div>
+              <p class="chair-scripture">
+                <sup style="color:var(--gold-dim);">43</sup> The next day Jesus decided to go to Galilee. He found Philip and said to him, <span class="highlight">"Come, follow me."</span><br><br>
+                <sup style="color:var(--gold-dim);">44</sup> Philip was from Bethsaida, Andrew and Peter's hometown.<br><br>
+                <sup style="color:var(--gold-dim);">45</sup> Philip went to look for Nathanael and told him, "We have found the very person Moses and the prophets wrote about! His name is Jesus, the son of Joseph from Nazareth."
+              </p>
+            </div>
+            <div>
+              <div class="chair-ref">John 1:43–45</div>
+              <div class="chair-flip-hint">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="chair-card">
-        <div class="chair-number">CHAIR 03</div>
-        <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
-        <div class="chair-title">The Worker</div>
-        <div class="chair-challenge">"Fish for Men"</div>
-        <p class="chair-action">Students learn to pursue the lost, share their story, and grip the plow of ministry. They've shifted from me-centric to others-centric.</p>
-        <div class="chair-verse">Matthew 4:19 · Equip</div>
-        <div class="chair-bar"></div>
+
+      <!-- CHAIR 3 -->
+      <div class="chair-card" onclick="this.classList.toggle('flipped')">
+        <div class="chair-inner">
+          <div class="chair-front">
+            <div class="chair-number">CHAIR 03</div>
+            <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <div class="chair-title">The Worker</div>
+            <div class="chair-challenge">"Fish for Men"</div>
+            <p class="chair-action">Students learn to pursue the lost, share their story, and grip the plow of ministry. They've shifted from me-centric to others-centric.</p>
+            <div class="chair-verse">Matthew 4:19 · Equip</div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
+            <div class="chair-bar"></div>
+          </div>
+          <div class="chair-back">
+            <div>
+              <div class="chair-back-hint">Matthew 4:18–20</div>
+              <p class="chair-scripture">
+                <sup style="color:var(--gold-dim);">18</sup> One day as Jesus was walking along the shore of the Sea of Galilee, he saw two brothers—Simon, also called Peter, and Andrew—throwing a net into the water, for they fished for a living.<br><br>
+                <sup style="color:var(--gold-dim);">19</sup> Jesus called out to them, <span class="highlight">"Come, follow me, and I will show you how to fish for people!"</span><br><br>
+                <sup style="color:var(--gold-dim);">20</sup> And they left their nets at once and followed him.
+              </p>
+            </div>
+            <div>
+              <div class="chair-ref">Matthew 4:18–20</div>
+              <div class="chair-flip-hint">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="chair-card">
-        <div class="chair-number">CHAIR 04</div>
-        <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
-        <div class="chair-title">Disciple-Maker</div>
-        <div class="chair-challenge">"Go & Bear Fruit"</div>
-        <p class="chair-action">A movement begins. Someone they led to Christ is now discipling someone they led to Christ.</p>
-        <div class="chair-verse">John 15:5 · Multiply</div>
-        <div class="chair-bar"></div>
+
+      <!-- CHAIR 4 -->
+      <div class="chair-card" onclick="this.classList.toggle('flipped')">
+        <div class="chair-inner">
+          <div class="chair-front">
+            <div class="chair-number">CHAIR 04</div>
+            <img src="11.png" style="width:56px;display:block;margin-bottom:1rem;">
+            <div class="chair-title">Disciple-Maker</div>
+            <div class="chair-challenge">"Go & Bear Fruit"</div>
+            <p class="chair-action">A movement begins. Someone they led to Christ is now discipling someone they led to Christ. The Great Commission is in full effect.</p>
+            <div class="chair-verse">John 15:5 · Multiply</div>
+            <div class="chair-flip-hint">Tap to see scripture ↻</div>
+            <div class="chair-bar"></div>
+          </div>
+          <div class="chair-back">
+            <div>
+              <div class="chair-back-hint">John 15:16</div>
+              <p class="chair-scripture">
+                <sup style="color:var(--gold-dim);">16</sup> You did not choose me, but I chose you and appointed you so that you might <span class="highlight">go and bear fruit—fruit that will last</span>—and so that whatever you ask in my name the Father will give you.
+              </p>
+            </div>
+            <div>
+              <div class="chair-ref">John 15:16</div>
+              <div class="chair-flip-hint">Tap to flip back ↻</div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <div style="margin-top:3rem; padding:2rem; background:var(--bg); border:1px solid var(--border);">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:center;">
         <div>
           <div class="section-label" style="margin-bottom:0.75rem;">Why This Framework Works</div>
-          <p style="font-size:0.9rem; color:var(--muted); line-height:1.7;">The 4-Chair model gives every leader, parent, and student a shared language. It removes ambiguity. It names where someone is without judgment. And it creates a clear, compelling picture of where Jesus is calling them next. It scales from a single small group to a multi-campus student ministry.</p>
+          <p style="font-size:0.9rem; color:var(--muted); line-height:1.7;">The 4-Chair model gives every leader, parent, and student a shared language. It removes ambiguity. It names where someone is without judgment. And it creates a clear, compelling picture of where Jesus is calling them next.</p>
         </div>
         <div style="display:flex; flex-direction:column; gap:0.75rem;">
           <div style="display:flex; align-items:center; gap:1rem; padding:0.75rem 1rem; border:1px solid var(--border);">
@@ -1191,8 +1352,7 @@
       <div class="resource-tags">
         <span class="tag">HSM + MSM</span>
         <span class="tag">Leader Development</span>
-        <span class="tag">Curriculum</span>
-        <span class="tag">Scalable</span>
+        <span class="tag">Leader Onboarding</span>
       </div>
     </div>
 
@@ -1212,10 +1372,9 @@
       <div class="resource-title">Team Leader Manual</div>
       <p class="resource-desc">A year long road map for team leaders to help shepherd leaders in our ministry — covering mission & mantras, the Team Leader role and expectations, monthly Key Conversations (1-on-1), Team Dialogues, the Big Three leader events, leader development frameworks, and further resources for building effective teams.</p>
       <div class="resource-tags">
-        <span class="tag">Team Leadership</span>
+        <span class="tag">Team Leader</span>
         <span class="tag">Leader Development</span>
         <span class="tag">Key Conversations</span>
-        <span class="tag">Systems</span>
       </div>
     </div>
   </div>
@@ -1262,7 +1421,7 @@
 <footer style="background:var(--surface); border-top:1px solid var(--border);">
   <div class="footer">
     <div>
-      <div class="footer-name">SE.CHURCH // Next Gen</div>
+      <div class="footer-name"><span style="color:var(--tan-light); font-weight:400;">Discipling the</span> <span style="color:var(--gold);">Next Generation</span></div>
       <div class="footer-tagline">Discipleship · Leader Development · Student Ministry</div>
     </div>
     <div class="footer-right">
