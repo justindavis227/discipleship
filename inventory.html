@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4 Chair Personal Inventory — SE Students</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1815;
+    --surface2: #222019;
+    --border: #2e2b26;
+    --tan: #c8b89a;
+    --tan-light: #ddd0bb;
+    --gold: #d4a843;
+    --gold-dim: #9a7830;
+    --white: #f5f0e8;
+    --muted: #7a7368;
+    --red: #c0392b;
+    --green: #2ecc71;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white; color: black; }
+    .print-only { display: block !important; }
+    #results-screen { display: block !important; }
+    .result-bar-fill { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+
+  .print-only { display: none; }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    background: rgba(15,14,12,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--tan-light);
+  }
+
+  .header-logo span { color: var(--gold); }
+
+  .header-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .header-back:hover { color: var(--tan-light); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    position: fixed;
+    top: 58px; left: 0; right: 0;
+    height: 3px;
+    background: var(--border);
+    z-index: 99;
+    transition: opacity 0.3s;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding-top: 80px;
+  }
+
+  .screen.active { display: block; }
+
+  /* ── INTRO SCREEN ── */
+  #intro-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 2rem 4rem;
+    text-align: center;
+  }
+
+  .intro-chair-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .intro-chair-row img:first-child {
+    width: 52px;
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+
+  .intro-chair-row img:not(:first-child) {
+    width: 52px;
+    opacity: 0.35;
+  }
+
+  .intro-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .intro-eyebrow::before, .intro-eyebrow::after {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .intro-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .intro-title em {
+    font-style: italic;
+    color: var(--tan);
+  }
+
+  .intro-sub {
+    font-size: 1rem;
+    color: var(--tan);
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 1.5rem auto 2.5rem;
+  }
+
+  .intro-rules {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 660px;
+    margin: 0 auto 3rem;
+    text-align: left;
+  }
+
+  .intro-rule {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+    border-left: 3px solid var(--gold);
+  }
+
+  .intro-rule-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .intro-rule-text {
+    font-size: 0.82rem;
+    color: var(--tan);
+    line-height: 1.55;
+  }
+
+  .name-field-wrap {
+    max-width: 400px;
+    margin: 0 auto 2rem;
+    text-align: left;
+  }
+
+  .name-field-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .name-field {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .name-field:focus { border-color: var(--gold); }
+  .name-field::placeholder { color: var(--muted); }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 2.5rem;
+    background: var(--gold);
+    color: #0f0e0c;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-start:hover {
+    background: var(--tan-light);
+    transform: translateY(-1px);
+  }
+
+  /* ── QUESTION SCREEN ── */
+  #question-screen {
+    padding: 90px 1.5rem 4rem;
+  }
+
+  .q-container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .q-chair-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .q-section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .q-section-badge::before {
+    content: '';
+    width: 1.5rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .q-chair-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .q-chair-challenge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .q-chair-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .q-scale-legend {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .q-scale-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 0.5rem;
+  }
+
+  .scale-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--tan);
+  }
+
+  .scale-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .scale-dot-1 { background: var(--muted); }
+  .scale-dot-2 { background: var(--tan); }
+  .scale-dot-3 { background: var(--gold); }
+
+  .q-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 2.5rem;
+  }
+
+  .q-item {
+    background: var(--surface);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold-dim);
+    min-width: 20px;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  .q-text {
+    font-size: 0.88rem;
+    color: var(--tan-light);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .q-options {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .q-radio-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+  }
+
+  .q-radio-label input[type="radio"] {
+    display: none;
+  }
+
+  .q-radio-btn {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--muted);
+    transition: all 0.2s;
+    cursor: pointer;
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .q-radio-label input:checked + .q-radio-btn {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: #0f0e0c;
+  }
+
+  .q-radio-label:hover .q-radio-btn {
+    border-color: var(--gold-dim);
+    color: var(--tan);
+  }
+
+  .q-radio-name {
+    font-size: 0.52rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .q-item.answered {
+    background: var(--surface2);
+  }
+
+  .q-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .q-counter {
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .btn-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: var(--gold);
+    color: #0f0e0c;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .btn-next.ready {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .btn-next.ready:hover {
+    background: var(--tan-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-prev {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.5rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-prev:hover { border-color: var(--tan); color: var(--tan); }
+
+  .unanswered-warning {
+    font-size: 0.75rem;
+    color: var(--red);
+    margin-top: 0.75rem;
+    display: none;
+  }
+
+  /* ── RESULTS SCREEN ── */
+  #results-screen {
+    padding: 90px 1.5rem 5rem;
+  }
+
+  .results-container {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .results-hero {
+    text-align: center;
+    padding: 3rem 1rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .results-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .results-eyebrow::before, .results-eyebrow::after {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .results-name-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--tan);
+    margin-bottom: 1.5rem;
+  }
+
+  .primary-chair-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .primary-chair-badge img { width: 36px; }
+
+  .primary-chair-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.1rem;
+  }
+
+  .primary-chair-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .results-summary-text {
+    font-size: 0.95rem;
+    color: var(--tan);
+    line-height: 1.75;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* Score bars */
+  .scores-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .score-col {
+    background: var(--surface);
+    padding: 1.75rem 1.25rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .score-col.primary-col {
+    background: var(--surface2);
+    border-top: 3px solid var(--gold);
+  }
+
+  .score-chair-img { width: 40px; margin: 0 auto 1rem; display: block; }
+
+  .score-chair-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--tan-light);
+    margin-bottom: 0.3rem;
+  }
+
+  .score-chair-challenge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1.25rem;
+  }
+
+  .score-bar-wrap {
+    height: 100px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 0.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-bar-fill {
+    width: 100%;
+    background: linear-gradient(to top, var(--gold), var(--gold-dim));
+    transition: height 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 0%;
+  }
+
+  .score-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+
+  .score-max {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .score-status {
+    margin-top: 0.5rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    display: inline-block;
+  }
+
+  .score-status.primary { background: var(--gold); color: #0f0e0c; }
+  .score-status.next { background: var(--surface); border: 1px solid var(--gold-dim); color: var(--gold-dim); }
+  .score-status.strong { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+
+  /* Next step panel */
+  .next-step-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    padding: 2rem 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .next-step-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .next-step-label::before { content: ''; width: 1.5rem; height: 1px; background: var(--gold); }
+
+  .next-step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+  }
+
+  .next-step-text {
+    font-size: 0.9rem;
+    color: var(--tan);
+    line-height: 1.75;
+  }
+
+  /* Per-chair breakdown */
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .breakdown-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+  }
+
+  .breakdown-card.is-primary { border-color: var(--gold-dim); }
+
+  .breakdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .breakdown-chair-info { flex: 1; }
+
+  .breakdown-chair-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--tan-light);
+  }
+
+  .breakdown-score-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.25rem 0.6rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--gold);
+  }
+
+  .breakdown-questions {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .breakdown-q-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .breakdown-q-row:last-child { border-bottom: none; }
+
+  .breakdown-q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--gold-dim);
+    min-width: 20px;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .breakdown-q-text { flex: 1; font-size: 0.78rem; color: var(--tan); }
+
+  .breakdown-q-score {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .score-1 { color: var(--muted); }
+  .score-2 { color: var(--tan); }
+  .score-3 { color: var(--gold); }
+
+  /* Action buttons */
+  .results-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 1rem;
+  }
+
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 2rem;
+    background: var(--gold);
+    color: #0f0e0c;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-download:hover { background: var(--tan-light); }
+
+  .btn-retake {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 2rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--tan);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-retake:hover { border-color: var(--tan); color: var(--white); }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    .intro-rules { grid-template-columns: 1fr; }
+    .scores-grid { grid-template-columns: repeat(2, 1fr); }
+    .breakdown-grid { grid-template-columns: 1fr; }
+    .q-item { flex-direction: column; gap: 1rem; }
+    .q-options { width: 100%; justify-content: space-between; }
+    .q-radio-btn { width: 36px; height: 36px; }
+    .site-header { padding: 1rem 1.25rem; }
+    .header-logo { font-size: 0.8rem; }
+  }
+
+  @media (max-width: 480px) {
+    .scores-grid { grid-template-columns: 1fr 1fr; }
+    .q-nav { flex-direction: column; align-items: stretch; }
+    .btn-next, .btn-prev { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header no-print">
+  <div class="header-logo">Discipling the <span>Next Generation</span></div>
+  <a href="index.html" class="header-back">← Back to Site</a>
+</header>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap no-print" id="progressWrap" style="opacity:0;">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     INTRO SCREEN
+══════════════════════════════════════════ -->
+<div id="intro-screen" class="screen active">
+  <div class="intro-chair-row">
+    <img src="10.png" alt="Chair 1">
+    <img src="11.png" alt="Chair 2">
+    <img src="11.png" alt="Chair 3">
+    <img src="11.png" alt="Chair 4">
+  </div>
+
+  <div class="intro-eyebrow">4 Chair Discipling</div>
+  <h1 class="intro-title">Personal<br><em>Inventory</em></h1>
+
+  <p class="intro-sub">
+    Answer each question honestly. This inventory is a tool to help you discover the next step in your disciple-making journey — not a judgment of where you are.
+  </p>
+
+  <div class="intro-rules">
+    <div class="intro-rule">
+      <div class="intro-rule-label">28 Questions</div>
+      <div class="intro-rule-text">Seven questions per chair, scored 1–3. Takes about 5 minutes.</div>
+    </div>
+    <div class="intro-rule">
+      <div class="intro-rule-label">Scoring</div>
+      <div class="intro-rule-text">0–19 in a chair means stay focused there. 20–21 means you're ready to move forward.</div>
+    </div>
+    <div class="intro-rule">
+      <div class="intro-rule-label">Results</div>
+      <div class="intro-rule-text">You'll receive a full breakdown and your next step. You can save or print your results.</div>
+    </div>
+  </div>
+
+  <div class="name-field-wrap">
+    <label class="name-field-label" for="userName">Your Name <span style="color:var(--muted); font-weight:400;">(optional)</span></label>
+    <input class="name-field" type="text" id="userName" placeholder="Enter your name…">
+  </div>
+
+  <button class="btn-start" onclick="startInventory()">Begin the Inventory →</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     QUESTION SCREEN
+══════════════════════════════════════════ -->
+<div id="question-screen" class="screen">
+  <div class="q-container">
+    <div class="q-chair-header">
+      <div class="q-section-badge" id="qSectionBadge">Chair 1 of 4</div>
+      <h2 class="q-chair-title" id="qChairTitle">The Lost</h2>
+      <div class="q-chair-challenge" id="qChairChallenge">"Come & See"</div>
+      <p class="q-chair-desc" id="qChairDesc"></p>
+    </div>
+
+    <div class="q-scale-legend" id="qScaleLegend">
+      <span class="q-scale-label">Score:</span>
+      <span class="scale-item"><span class="scale-dot scale-dot-1"></span><span id="scaleName1"></span> = 1</span>
+      <span class="scale-item"><span class="scale-dot scale-dot-2"></span><span id="scaleName2"></span> = 2</span>
+      <span class="scale-item"><span class="scale-dot scale-dot-3"></span><span id="scaleName3"></span> = 3</span>
+    </div>
+
+    <div class="q-list" id="qList"></div>
+
+    <div class="unanswered-warning" id="unansweredWarning">Please answer all questions before continuing.</div>
+
+    <div class="q-nav">
+      <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+        <button class="btn-prev" id="btnPrev" onclick="goBack()">← Previous</button>
+        <span class="q-counter" id="qCounter">Section 1 of 4</span>
+      </div>
+      <button class="btn-next" id="btnNext" onclick="goNext()">Next Section →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     RESULTS SCREEN
+══════════════════════════════════════════ -->
+<div id="results-screen" class="screen">
+  <div class="results-container">
+
+    <div class="results-hero">
+      <div class="results-eyebrow">Your Results</div>
+      <h2 class="results-title">4 Chair Personal Inventory</h2>
+      <div class="results-name-display" id="resultsNameDisplay"></div>
+
+      <div class="primary-chair-badge" id="primaryBadge">
+        <img id="primaryBadgeImg" src="10.png" alt="Chair">
+        <div>
+          <span class="primary-chair-label">Your Primary Chair</span>
+          <span class="primary-chair-name" id="primaryBadgeName"></span>
+        </div>
+      </div>
+
+      <p class="results-summary-text" id="resultsSummaryText"></p>
+    </div>
+
+    <!-- Score bars -->
+    <div class="scores-grid" id="scoresGrid"></div>
+
+    <!-- Next step panel -->
+    <div class="next-step-panel">
+      <div class="next-step-label">Your Next Step</div>
+      <div class="next-step-title" id="nextStepTitle"></div>
+      <p class="next-step-text" id="nextStepText"></p>
+    </div>
+
+    <!-- Per-chair breakdown -->
+    <div class="breakdown-grid" id="breakdownGrid"></div>
+
+    <!-- Actions -->
+    <div class="results-actions no-print">
+      <button class="btn-download" onclick="downloadResults()">↓ Save My Results</button>
+      <button class="btn-retake" onclick="retakeInventory()">↺ Retake Inventory</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const chairs = [
+  {
+    name: 'The Seeker',
+    title: 'Chair One — The Seeker',
+    challenge: '"Come & See"',
+    img: '10.png',
+    desc: 'This chair represents someone exploring who Jesus is. The focus is on faith — understanding salvation and what it means to belong to Christ.',
+    scale: ['Disagree', 'Unsure', 'Agree'],
+    questions: [
+      'I am confident that I will be with God in heaven after I die.',
+      'I could never be good enough to earn my way to heaven.',
+      'Religious acts like going to church or being baptized do not make me a Christian.',
+      'There is only one way to God and that is through faith in His Son, Jesus Christ.',
+      'I have put my faith in Christ\'s death and resurrection as the only payment for my sin.',
+      'My commitment to follow Christ is a response to God\'s grace and the gift of salvation I\'ve received.',
+      'Those who don\'t put their faith in Christ will be separated from God for eternity in hell.',
+    ]
+  },
+  {
+    name: 'The Believer',
+    title: 'Chair Two — The Believer',
+    challenge: '"Follow Me"',
+    img: '11.png',
+    desc: 'This chair represents someone growing in their faith. The focus is on developing the character, priorities, and disciplines of Christ in everyday life.',
+    scale: ['Weak', 'Improving', 'Strong'],
+    questions: [
+      'I am developing the character of Christ (love, joy, peace, patience, kindness… Galatians 5:22-23).',
+      'I am developing the priorities of Christ (Love God and Love People… Matthew 22:37-39).',
+      'I recognize Christ as Lord and put Him first in every area of my life (time, money, relationships).',
+      'I am dependent on God\'s Spirit for strength and direction in my everyday life.',
+      'I spend time with God each day by reading His Word and talking to Him through prayer.',
+      'I know my spiritual gifts and look for ways to use them in serving others.',
+      'I am concerned for those who don\'t know Jesus and want to share Him with them.',
+    ]
+  },
+  {
+    name: 'The Worker',
+    title: 'Chair Three — The Worker',
+    challenge: '"Fish for Men"',
+    img: '11.png',
+    desc: 'This chair represents someone actively sharing their faith and discipling others. They\'ve shifted from me-centric to others-centric.',
+    scale: ['Weak', 'Improving', 'Strong'],
+    questions: [
+      'I pursue relationships with spiritually lost people and pray for their salvation.',
+      'I know how to communicate my salvation story (my testimony).',
+      'I know how to share the gospel message simply and clearly (in two minutes).',
+      'I look for and act upon opportunities to share the gospel message verbally with spiritually lost people.',
+      'I pursue discipling relationships with other believers and pray for their growth into Christlikeness.',
+      'I know the basics that a new believer needs to understand to grow in their faith.',
+      'I share what God is teaching me with others to encourage them in their faith.',
+    ]
+  },
+  {
+    name: 'The Disciple-Maker',
+    title: 'Chair Four — The Disciple-Maker',
+    challenge: '"Go & Bear Fruit"',
+    img: '11.png',
+    desc: 'This chair represents someone who multiplies disciples. They are actively discipling others who are now discipling others — a movement has begun.',
+    scale: ['Weak', 'Improving', 'Strong'],
+    questions: [
+      'I have showed others how to share their faith and they are putting it into practice.',
+      'I am regularly meeting with at least one other believer to show them how to follow Christ.',
+      'I am committed to walking with others through the process of becoming a disciple who makes disciples.',
+      'I model a disciple-making lifestyle that encourages and inspires others to make disciples.',
+      'I prioritize my schedule to be able to spend time with spiritually lost people and disciple believers.',
+      'I have discipled someone I led to Christ, and they are now discipling someone they led to Christ.',
+      'I initiate new relationships for the purpose of making disciples.',
+    ]
+  }
+];
+
+const nextSteps = [
+  {
+    title: 'Your next step is to place your faith in Jesus.',
+    text: 'Based on your scores, your primary focus is Chair One. This is a meaningful place to be — it means you\'re exploring what it means to follow Jesus. The most important step you can take is placing your faith in Christ\'s death and resurrection as the only payment for your sin. Talk to a trusted leader or pastor about what this means for you.'
+  },
+  {
+    title: 'Your next step is to build spiritual disciplines.',
+    text: 'Based on your scores, you\'re in Chair Two. You\'ve made a commitment to Christ — now the work is building the daily rhythms that shape you into His image. Focus on regular time in God\'s Word, prayer, and finding a community of believers who can help you grow.'
+  },
+  {
+    title: 'Your next step is to share your faith intentionally.',
+    text: 'Based on your scores, you\'re in Chair Three. You\'re a growing believer who is beginning to invest in others. Your next step is to be intentional about pursuing the lost and discipling at least one other believer. Who is your one? Who are you pouring into?'
+  },
+  {
+    title: 'Your next step is to multiply what God has done in you.',
+    text: 'Based on your scores, you\'re in Chair Four. You are a disciple who makes disciples. Your next step is to ensure the people you\'re discipling are discipling others — and to ask God where He wants you to expand your reach. The Great Commission is in full effect in your life.'
+  }
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentSection = 0;
+let answers = Array.from({length: 4}, () => Array(7).fill(null));
+let userName = '';
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = 'block';
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startInventory() {
+  userName = document.getElementById('userName').value.trim();
+  currentSection = 0;
+  answers = Array.from({length: 4}, () => Array(7).fill(null));
+  document.getElementById('progressWrap').style.opacity = '1';
+  showScreen('question-screen');
+  renderSection();
+}
+
+function retakeInventory() {
+  startInventory();
+  showScreen('intro-screen');
+  document.getElementById('progressWrap').style.opacity = '0';
+}
+
+// ══════════════════════════════════════════
+// RENDER QUESTIONS
+// ══════════════════════════════════════════
+function renderSection() {
+  const chair = chairs[currentSection];
+  document.getElementById('qSectionBadge').textContent = `Chair ${currentSection + 1} of 4`;
+  document.getElementById('qChairTitle').textContent = chair.name;
+  document.getElementById('qChairChallenge').textContent = chair.challenge;
+  document.getElementById('qChairDesc').textContent = chair.desc;
+  document.getElementById('scaleName1').textContent = chair.scale[0];
+  document.getElementById('scaleName2').textContent = chair.scale[1];
+  document.getElementById('scaleName3').textContent = chair.scale[2];
+  document.getElementById('qCounter').textContent = `Section ${currentSection + 1} of 4`;
+  document.getElementById('btnPrev').style.visibility = currentSection === 0 ? 'hidden' : 'visible';
+
+  const qOffset = currentSection * 7;
+  const list = document.getElementById('qList');
+  list.innerHTML = '';
+
+  chair.questions.forEach((q, i) => {
+    const saved = answers[currentSection][i];
+    const item = document.createElement('div');
+    item.className = 'q-item' + (saved !== null ? ' answered' : '');
+    item.innerHTML = `
+      <div class="q-num">${qOffset + i + 1}</div>
+      <div class="q-text">${q}</div>
+      <div class="q-options">
+        ${[1,2,3].map(v => `
+          <label class="q-radio-label">
+            <input type="radio" name="q${i}" value="${v}" ${saved === v ? 'checked' : ''} onchange="recordAnswer(${i}, ${v})">
+            <div class="q-radio-btn">${v}</div>
+            <span class="q-radio-name">${chair.scale[v-1]}</span>
+          </label>
+        `).join('')}
+      </div>
+    `;
+    list.appendChild(item);
+  });
+
+  document.getElementById('unansweredWarning').style.display = 'none';
+  updateNextBtn();
+  updateProgress();
+}
+
+function recordAnswer(qIndex, value) {
+  answers[currentSection][qIndex] = value;
+  const items = document.getElementById('qList').children;
+  items[qIndex].classList.add('answered');
+  updateNextBtn();
+}
+
+function updateNextBtn() {
+  const btn = document.getElementById('btnNext');
+  const allAnswered = answers[currentSection].every(a => a !== null);
+  btn.classList.toggle('ready', allAnswered);
+  if (currentSection === 3) {
+    btn.textContent = allAnswered ? 'See My Results →' : 'See My Results →';
+  } else {
+    btn.innerHTML = 'Next Section →';
+  }
+}
+
+function updateProgress() {
+  const answered = answers.flat().filter(a => a !== null).length;
+  const pct = (answered / 28) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function goNext() {
+  const allAnswered = answers[currentSection].every(a => a !== null);
+  if (!allAnswered) {
+    document.getElementById('unansweredWarning').style.display = 'block';
+    return;
+  }
+  document.getElementById('unansweredWarning').style.display = 'none';
+
+  if (currentSection < 3) {
+    currentSection++;
+    showScreen('question-screen');
+    renderSection();
+  } else {
+    showResults();
+  }
+}
+
+function goBack() {
+  if (currentSection > 0) {
+    currentSection--;
+    showScreen('question-screen');
+    renderSection();
+  }
+}
+
+// ══════════════════════════════════════════
+// RESULTS
+// ══════════════════════════════════════════
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+
+  const scores = answers.map(chairAnswers => chairAnswers.reduce((s, v) => s + v, 0));
+
+  // Find the first chair scored 19 or below — that's the focus chair.
+  // If all chairs scored 20+, the person is a Chair 4 Disciple-Maker.
+  const focusIdx = scores.findIndex(s => s <= 19);
+  const displayPrimary = focusIdx >= 0 ? focusIdx : 3;
+
+  // Name display
+  const nameEl = document.getElementById('resultsNameDisplay');
+  nameEl.textContent = userName ? `Results for ${userName}` : '';
+
+  // Primary badge
+  document.getElementById('primaryBadgeImg').src = chairs[displayPrimary].img;
+  document.getElementById('primaryBadgeName').textContent = chairs[displayPrimary].name;
+
+  // Summary
+  document.getElementById('resultsSummaryText').textContent =
+    `You completed all 28 questions across 4 chairs. Your scores are shown below. ${displayPrimary < 3 || scores[3] <= 19 ? `Your primary focus chair is ${chairs[displayPrimary].name} with a score of ${scores[displayPrimary]}/21.` : `You scored 20 or above in every chair — you are a Disciple-Maker. Keep multiplying.`}`;
+
+  // Score bars
+  const scoresGrid = document.getElementById('scoresGrid');
+  scoresGrid.innerHTML = '';
+  scores.forEach((score, i) => {
+    const isPrimary = i === displayPrimary;
+    const pct = (score / 21) * 100;
+    let statusClass = 'strong';
+    let statusText = 'Strong';
+    if (score <= 19 && i === displayPrimary) { statusClass = 'primary'; statusText = 'Primary Focus'; }
+    else if (score <= 19) { statusClass = 'next'; statusText = 'Keep Growing'; }
+
+    const col = document.createElement('div');
+    col.className = 'score-col' + (isPrimary ? ' primary-col' : '');
+    col.innerHTML = `
+      <img class="score-chair-img" src="${chairs[i].img}" alt="${chairs[i].name}">
+      <div class="score-chair-name">${chairs[i].name}</div>
+      <div class="score-chair-challenge">${chairs[i].challenge}</div>
+      <div class="score-bar-wrap">
+        <div class="result-bar-fill" id="bar-${i}" style="height:0%"></div>
+      </div>
+      <div class="score-number">${score}</div>
+      <div class="score-max">out of 21</div>
+      <div class="score-status ${statusClass}">${statusText}</div>
+    `;
+    scoresGrid.appendChild(col);
+
+    // Animate bar after render
+    setTimeout(() => {
+      document.getElementById('bar-' + i).style.height = pct + '%';
+    }, 200 + i * 150);
+  });
+
+  // Next step
+  document.getElementById('nextStepTitle').textContent = nextSteps[displayPrimary].title;
+  document.getElementById('nextStepText').textContent = nextSteps[displayPrimary].text;
+
+  // Breakdown cards
+  const breakdownGrid = document.getElementById('breakdownGrid');
+  breakdownGrid.innerHTML = '';
+  chairs.forEach((chair, ci) => {
+    const isPrimary = ci === displayPrimary;
+    const card = document.createElement('div');
+    card.className = 'breakdown-card' + (isPrimary ? ' is-primary' : '');
+    const qRows = chair.questions.map((q, qi) => {
+      const val = answers[ci][qi];
+      return `<div class="breakdown-q-row">
+        <span class="breakdown-q-num">${ci * 7 + qi + 1}</span>
+        <span class="breakdown-q-text">${q}</span>
+        <span class="breakdown-q-score score-${val}">${val}</span>
+      </div>`;
+    }).join('');
+    card.innerHTML = `
+      <div class="breakdown-header">
+        <div class="breakdown-chair-info">
+          <div class="breakdown-chair-name">${chair.name} ${chair.challenge}</div>
+        </div>
+        <div class="breakdown-score-pill">${scores[ci]}/21</div>
+      </div>
+      <div class="breakdown-questions">${qRows}</div>
+    `;
+    breakdownGrid.appendChild(card);
+  });
+
+  showScreen('results-screen');
+  document.getElementById('progressWrap').style.opacity = '0';
+}
+
+// ══════════════════════════════════════════
+// DOWNLOAD / PRINT
+// ══════════════════════════════════════════
+function downloadResults() {
+  window.print();
+}
+</script>
+</body>
+</html>
