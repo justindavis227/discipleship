@@ -39,7 +39,7 @@ export default function ChairCard({
     >
       {/* Front */}
       <div
-        className="flex flex-col justify-between p-8 bg-surface"
+        className="flex flex-col justify-between p-8 bg-bg"
         style={{
           opacity: flipped ? 0 : 1,
           transform: flipped ? "rotateY(-90deg)" : "rotateY(0deg)",
@@ -48,7 +48,7 @@ export default function ChairCard({
           backfaceVisibility: "hidden",
         }}
       >
-        <div className="flex-1">
+        <div>
           <div className="font-mono text-[0.7rem] text-gold tracking-[0.1em] mb-5">
             {number}
           </div>
