@@ -315,9 +315,9 @@ export default function BriefingForm({ initialData, defaultIssueNumber }: Briefi
             ● Will publish immediately
           </span>
         )}
-        {isEdit && initialData?.slug && (
+        {isEdit && initialData?.id && (
           <a
-            href={`/briefing/${initialData.slug}`}
+            href={`/admin/briefings/${initialData.id}/preview`}
             target="_blank"
             rel="noopener noreferrer"
             className="ml-auto font-mono text-[0.72rem] text-muted hover:text-gold transition-colors duration-200 no-underline"
