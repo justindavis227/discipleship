@@ -39,7 +39,7 @@ export default function ChairCard({
     >
       {/* Front */}
       <div
-        className="flex flex-col p-8 bg-bg"
+        className="flex flex-col justify-between p-8 bg-bg"
         style={{
           opacity: flipped ? 0 : 1,
           transform: flipped ? "rotateY(-90deg)" : "rotateY(0deg)",
@@ -48,25 +48,27 @@ export default function ChairCard({
           backfaceVisibility: "hidden",
         }}
       >
-        <div className="font-mono text-[0.7rem] text-gold tracking-[0.1em] mb-5">
-          {number}
+        <div>
+          <div className="font-mono text-[0.7rem] text-gold tracking-[0.1em] mb-5">
+            {number}
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={image}
+            alt=""
+            style={{ width: "52px", display: "block", marginBottom: "1rem" }}
+          />
+          <div className="font-display text-[1.2rem] font-bold text-white mb-[0.4rem]">
+            {title}
+          </div>
+          <div className="text-[0.68rem] font-bold tracking-[0.15em] uppercase text-gold mb-3">
+            {challenge}
+          </div>
+          <p className="text-[0.82rem] text-muted leading-[1.65]">
+            {action}
+          </p>
         </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={image}
-          alt=""
-          style={{ width: "52px", display: "block", marginBottom: "1rem" }}
-        />
-        <div className="font-display text-[1.2rem] font-bold text-white mb-[0.4rem]">
-          {title}
-        </div>
-        <div className="text-[0.68rem] font-bold tracking-[0.15em] uppercase text-gold mb-3">
-          {challenge}
-        </div>
-        <p className="text-[0.82rem] text-muted leading-[1.65] mb-4 flex-1">
-          {action}
-        </p>
-        <div className="mt-auto">
+        <div>
           <div className="font-mono text-[0.7rem] text-gold-dim mb-2">{verse}</div>
           {/* Gold fill bar — animates on hover, only when not flipped */}
           <div className="relative h-[2px] bg-border overflow-hidden">
