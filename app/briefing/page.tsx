@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { Briefing } from "@/lib/types/briefing";
@@ -10,13 +11,33 @@ import SubscribeForm from "@/app/components/briefing/SubscribeForm";
 
 type SearchParams = Promise<{ audience?: string }>;
 
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  title: "The Next Gen Briefing | se.church Next Gen",
+  description:
+    "Weekly insights for next gen leaders — research, culture, and Scripture-rooted perspective curated for parents, leaders, and students.",
+  openGraph: {
+    title: "The Next Gen Briefing",
+    description:
+      "Weekly insights for next gen leaders — research, culture, and Scripture-rooted perspective curated for parents, leaders, and students.",
+    url: "/briefing",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Next Gen Briefing",
+    description:
+      "Weekly insights for next gen leaders — research, culture, and Scripture-rooted perspective curated for parents, leaders, and students.",
+  },
+};
+
 export default async function BriefingPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
   const { audience } = await searchParams;
-  const supabase = await createPublicClient();
+  const supabase = createPublicClient();
 
   // Always show the latest published briefing as the feature
   const { data: latest } = await supabase
