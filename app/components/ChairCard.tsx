@@ -32,14 +32,14 @@ export default function ChairCard({
 
   return (
     <div
-      className={`group relative overflow-hidden cursor-pointer border border-border transition-colors duration-300 hover:border-gold-dim h-[600px] ${
+      className={`group relative overflow-hidden cursor-pointer border border-border transition-colors duration-300 hover:border-gold-dim h-[476px] ${
         flipped ? "border-gold-dim" : ""
       }`}
       onClick={() => setFlipped((f) => !f)}
     >
       {/* Front */}
       <div
-        className="flex flex-col justify-between p-8 bg-bg"
+        className="flex flex-col justify-between p-8 bg-surface"
         style={{
           opacity: flipped ? 0 : 1,
           transform: flipped ? "rotateY(-90deg)" : "rotateY(0deg)",
