@@ -30,6 +30,7 @@ export default async function AdminPage() {
       <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(260px,1fr))]">
         {[
           { label: "Briefings", desc: "Create, edit, and publish weekly issues", href: "/admin/briefings" },
+          { label: "Sources", desc: "Manage vetted research and culture sources", href: "/admin/sources" },
           { label: "Subscribers", desc: "View confirmed subscribers by audience", href: null },
           { label: "Send", desc: "Send a published briefing to subscribers", href: "/admin/send" },
         ].map(({ label, desc, href }) => {
