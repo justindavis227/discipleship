@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { Suspense } from "react";
-import { createPublicClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { Briefing } from "@/lib/types/briefing";
 import BriefingFeature from "@/app/components/briefing/BriefingFeature";
 import ArchiveList from "@/app/components/briefing/ArchiveList";

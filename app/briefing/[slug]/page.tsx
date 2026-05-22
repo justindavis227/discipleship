@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { notFound } from "next/navigation";
-import { createPublicClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import type { Briefing } from "@/lib/types/briefing";
 import BriefingDetail from "@/app/components/briefing/BriefingDetail";
 
