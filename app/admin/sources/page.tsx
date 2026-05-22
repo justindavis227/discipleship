@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { Source } from "@/lib/types/source";
 
 const CATEGORY_ORDER: Source["category"][] = ["tier1", "tier2", "tier3", "other"];
@@ -18,7 +19,7 @@ export default async function AdminSourcesPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const { data } = await supabase
+  const { data } = await supabaseAdmin
     .from("sources")
     .select("*")
     .order("name", { ascending: true });
@@ -119,7 +120,6 @@ export default async function AdminSourcesPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-[0.75rem] text-muted hover:text-gold transition-colors duration-200 truncate block max-w-[40ch] no-underline"
-                        onClick={(e) => e.stopPropagation()}
                       >
                         {s.url}
                       </a>
