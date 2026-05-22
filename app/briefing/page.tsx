@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/server";
 import type { Briefing } from "@/lib/types/briefing";
 import BriefingFeature from "@/app/components/briefing/BriefingFeature";
 import ArchiveList from "@/app/components/briefing/ArchiveList";
@@ -14,25 +14,16 @@ export default async function BriefingPage({
   searchParams: SearchParams;
 }) {
   const { audience } = await searchParams;
-
-  // Temporary env-var diagnostics — remove after confirming production env is set
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  console.log("[briefing] NEXT_PUBLIC_SUPABASE_URL:", supabaseUrl ? `set (${supabaseUrl.length} chars, ends …${supabaseUrl.slice(-6)})` : "UNDEFINED");
-  console.log("[briefing] NEXT_PUBLIC_SUPABASE_ANON_KEY:", supabaseKey ? `set (${supabaseKey.length} chars)` : "UNDEFINED");
-
-  const supabase = await createClient();
+  const supabase = await createPublicClient();
 
   // Always show the latest published briefing as the feature
-  const { data: latest, error: latestError } = await supabase
+  const { data: latest } = await supabase
     .from("briefings")
     .select("*")
     .eq("status", "published")
     .order("published_at", { ascending: false })
     .limit(1)
     .single<Briefing>();
-
-  if (latestError) console.error("[briefing] latest query error:", latestError.message, latestError.code);
 
   // Archive: all published except latest, filtered by audience if set
   let archiveQuery = supabase

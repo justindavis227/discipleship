@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/server";
 import type { Briefing } from "@/lib/types/briefing";
 import BriefingDetail from "@/app/components/briefing/BriefingDetail";
 
@@ -11,7 +11,7 @@ export default async function BriefingSlugPage({
   params: Params;
 }) {
   const { slug } = await params;
-  const supabase = await createClient();
+  const supabase = await createPublicClient();
 
   const { data, error } = await supabase
     .from("briefings")
