@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     description:
       "Weekly insights for next gen leaders — research, culture, and Scripture-rooted perspective curated for parents, leaders, and students.",
   },
+  alternates: {
+    types: {
+      "application/rss+xml": "/briefing/rss.xml",
+    },
+  },
 };
 
 // Strip characters that would break PostgREST's .or() filter string
