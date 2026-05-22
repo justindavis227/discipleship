@@ -31,6 +31,7 @@ export default async function AdminPage() {
         {[
           { label: "Briefings", desc: "Create, edit, and publish weekly issues", href: "/admin/briefings" },
           { label: "Sources", desc: "Manage vetted research and culture sources", href: "/admin/sources" },
+          { label: "Collect", desc: "Pull RSS feeds and build a Claude draft prompt", href: "/admin/collect" },
           { label: "Subscribers", desc: "View confirmed subscribers by audience", href: null },
           { label: "Send", desc: "Send a published briefing to subscribers", href: "/admin/send" },
         ].map(({ label, desc, href }) => {
