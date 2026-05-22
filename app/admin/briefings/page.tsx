@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { Briefing } from "@/lib/types/briefing";
