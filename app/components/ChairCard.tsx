@@ -39,7 +39,7 @@ export default function ChairCard({
     >
       {/* Front */}
       <div
-        className="flex flex-col justify-between p-8 bg-bg"
+        className="absolute inset-0 flex flex-col justify-between p-8 bg-bg"
         style={{
           opacity: flipped ? 0 : 1,
           transform: flipped ? "rotateY(-90deg)" : "rotateY(0deg)",
