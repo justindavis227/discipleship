@@ -32,7 +32,7 @@ export default function ChairCard({
 
   return (
     <div
-      className={`group relative overflow-hidden cursor-pointer border border-border transition-colors duration-300 hover:border-gold-dim h-[476px] ${
+      className={`group relative overflow-hidden cursor-pointer border border-border bg-surface transition-colors duration-300 hover:border-gold-dim h-[476px] ${
         flipped ? "border-gold-dim" : ""
       }`}
       onClick={() => setFlipped((f) => !f)}
