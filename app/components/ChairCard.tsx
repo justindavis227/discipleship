@@ -48,7 +48,7 @@ export default function ChairCard({
           backfaceVisibility: "hidden",
         }}
       >
-        <div>
+        <div className="flex-1">
           <div className="font-mono text-[0.7rem] text-gold tracking-[0.1em] mb-5">
             {number}
           </div>
