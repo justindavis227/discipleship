@@ -72,7 +72,7 @@ export default function Hero() {
         className="absolute inset-0 bg-cover opacity-[0.12] mix-blend-luminosity"
         style={{
           backgroundImage: "url('/images/Typography_IMG.png')",
-          backgroundPosition: "center right",
+          backgroundPosition: "center center",
         }}
       />
 
