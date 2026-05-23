@@ -188,7 +188,7 @@ export default function Hero() {
 
 function StatCard({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="bg-surface border border-border p-6 relative overflow-hidden">
+    <div className="bg-bg border border-border p-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-[3px] h-full bg-gold" />
       <div className="text-[0.68rem] font-semibold tracking-[0.15em] uppercase text-muted mb-[0.4rem]">
         {label}
