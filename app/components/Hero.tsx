@@ -76,6 +76,14 @@ export default function Hero() {
         }}
       />
 
+      {/* Right-edge fade for topo texture */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to right, transparent 40%, #0f0e0c 75%)",
+        }}
+      />
+
       {/* Vertical grid lines */}
       {[25, 50, 75].map((pct) => (
         <div
